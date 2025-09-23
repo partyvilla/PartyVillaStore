@@ -5,7 +5,7 @@ import { createRouteHandler } from '@/lib/database/supabase-server'
 const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS 
   ? process.env.ADMIN_EMAILS.split(',').map(email => email.trim()) 
   : [
-    "jsc.21905@gmail.com"
+    "partyvilla.store@gmail.com"
   ]
 
 // GET all products with stock info for admin

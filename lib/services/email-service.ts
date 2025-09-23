@@ -106,6 +106,7 @@ export const emailTemplates = {
             <div class="footer">
               <p>Thank you for choosing Party Villa!</p>
               <p>If you have any questions, please contact our support team.</p>
+              <p><strong>Support:</strong> <a href="tel:+917977837748" style="color: #6366f1; text-decoration: none;">+91 7977837748</a></p>
             </div>
           </div>
         </body>
@@ -177,6 +178,7 @@ export const emailTemplates = {
             <div class="footer">
               <p>Thank you for choosing Party Villa!</p>
               <p>Track your order anytime by logging into your account.</p>
+              <p><strong>Support:</strong> <a href="tel:+917977837748" style="color: #6366f1; text-decoration: none;">+91 7977837748</a></p>
             </div>
           </div>
         </body>

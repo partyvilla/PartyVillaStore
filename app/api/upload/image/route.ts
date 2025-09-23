@@ -5,7 +5,7 @@ import { createRouteHandler } from '@/lib/database/supabase-server'
 // Load admin emails from environment variables
 const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS 
   ? process.env.ADMIN_EMAILS.split(',').map(email => email.trim()) 
-  : ["jsc.21905@gmail.com"]
+  : ["partyvilla.store@gmail.com"]
 
 export async function POST(request: NextRequest) {
   try {

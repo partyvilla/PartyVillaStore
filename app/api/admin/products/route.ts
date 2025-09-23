@@ -7,7 +7,7 @@ const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS
   ? process.env.ADMIN_EMAILS.split(',').map(email => email.trim()) 
   : [
     // Fallback for development - remove in production
-    "jsc.21905@gmail.com"
+    "partyvilla.store@gmail.com"
   ]
 
 // GET /api/admin/products - List all products

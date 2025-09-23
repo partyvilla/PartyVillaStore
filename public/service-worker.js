@@ -3,13 +3,6 @@ const urlsToCache = [
   '/',
   '/globals.css',
   '/party-villa banner.webp',
-  '/balloons-assortment.png',
-  '/birthday-essentials.png',
-  '/diverse-products-still-life.png',
-  '/festive-celebration-with-balloons-and-confetti.png',
-  '/party-decorations.png',
-  '/pastel-balloons-pack.png',
-  '/special-occasions-party-decor.png'
 ];
 
 // Install event - cache resources

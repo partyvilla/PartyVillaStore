@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // Admin emails - hardcoded for development only
 // In production, this would be configured via environment variables
-const ADMIN_EMAILS = ['jsc.21905@gmail.com']
+const ADMIN_EMAILS = ['partyvilla.store@gmail.com']
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)

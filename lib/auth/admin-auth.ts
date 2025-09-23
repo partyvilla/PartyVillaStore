@@ -2,7 +2,7 @@ import { createClient } from "@/lib/database/supabase";
 
 const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS
   ? process.env.ADMIN_EMAILS.split(",").map((email) => email.trim())
-  : ["jsc.21905@gmail.com"];
+  : ["partyvilla.store@gmail.com"];
 
 export async function isAdminByEmail(email: string): Promise<boolean> {
   return ADMIN_EMAILS.includes(email);
