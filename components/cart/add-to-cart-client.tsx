@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useCart } from "@/hooks/use-cart"
+import { useAuth } from "@/lib/auth/auth-provider"
 
 export function AddToCartClient({
   id,
@@ -21,6 +22,7 @@ export function AddToCartClient({
 }) {
   const { addItem, getCartQty } = useCart()
   const router = useRouter()
+  const { user } = useAuth()
   // Default to first variant if exists
   const [selectedVariant, setSelectedVariant] = useState(variants.length > 0 ? variants[0].name : undefined)
   const [qty, setQty] = useState<number>()
@@ -65,6 +67,10 @@ export function AddToCartClient({
   const isMaxInCart = cartQty >= stock && stock > 0
 
   async function handleAddToCart() {
+    if (!user) {
+      router.push("/auth/login")
+      return
+    }
     setError(null)
     if (isOutOfStock) {
       setError("This variant is currently out of stock")
