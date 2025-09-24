@@ -11,12 +11,6 @@ export default function ImageOptimizer() {
     // Critical images to prefetch
     const criticalImages = [
       '/party-villa banner.webp',
-      '/birthday-essentials.png',
-      '/party-decorations.png',
-      '/festive-celebration-with-balloons-and-confetti.png',
-      '/special-occasions-party-decor.png',
-      '/pastel-balloons-pack.png',
-      '/balloons-assortment.png',
     ];
 
     // Use requestIdleCallback to prefetch images during browser idle time

@@ -27,15 +27,7 @@ export default function LinkPrefetcher() {
       // Use requestIdleCallback for browser idle time
       if ('requestIdleCallback' in window) {
         window.requestIdleCallback(() => {
-          // Tell service worker to precache these pages
-          if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-              type: 'PRECACHE_PAGES',
-              urls: urlsToPrefetch
-            });
-          }
-          
-          // Also prefetch using link preload
+          // Prefetch using link preload
           urlsToPrefetch.forEach(url => {
             const link = document.createElement('link');
             link.rel = 'prefetch';
@@ -46,14 +38,6 @@ export default function LinkPrefetcher() {
       } else {
         // Fallback for browsers that don't support requestIdleCallback
         setTimeout(() => {
-          // Similar logic as above but with setTimeout
-          if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-              type: 'PRECACHE_PAGES',
-              urls: urlsToPrefetch
-            });
-          }
-          
           urlsToPrefetch.forEach(url => {
             const link = document.createElement('link');
             link.rel = 'prefetch';

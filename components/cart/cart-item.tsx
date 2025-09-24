@@ -18,17 +18,15 @@ export function CartItem({ item }: { item: ICartItem }) {
     <Card className="overflow-hidden">
       <CardContent className="flex items-center gap-4 p-4">
         <div className="h-16 w-16 overflow-hidden rounded border border-border">
-          {item.img ? (
-            <Image
-              src={item.img || "/placeholder.svg"}
-              alt={item.name}
-              width={64}
-              height={64}
-              className="h-16 w-16 object-cover"
-            />
-          ) : (
-            <img src="/diverse-products-still-life.png" alt={item.name} className="h-16 w-16 object-cover" />
-          )}
+
+          <Image
+            src={item.img || "/placeholder.svg"}
+            alt={item.name}
+            width={64}
+            height={64}
+            className="h-16 w-16 object-cover"
+          />
+
         </div>
         <div className="flex-1">
           <div className="flex items-start justify-between gap-2">
@@ -51,12 +49,12 @@ export function CartItem({ item }: { item: ICartItem }) {
                 // Allow direct entry of any number
                 const rawValue = e.target.value;
                 const newQty = Number(rawValue) || 1;
-                
+
                 // Only set quantity if it's valid
                 if (newQty >= 1) {
                   setQuantity(item.id, newQty, item.variant);
                 }
-                
+
                 // Remove toast notification for quantity changes
                 // Simpler UX without constant notifications
               }}

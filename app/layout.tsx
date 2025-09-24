@@ -9,7 +9,6 @@ import { SiteHeader } from "@/components/layout/site-header"
 import { CategoryNav } from "@/components/categories/category-nav" 
 import { Footer } from "@/components/layout/footer"
 import { Toaster } from "@/components/ui/toaster"
-import ServiceWorkerRegistration from "@/components/services/service-worker-registration"
 import LinkPrefetcher from "@/components/navigation/link-prefetcher"
 import ImageOptimizer from "@/components/media/image-optimizer"
 import { AuthProvider } from "@/lib/auth/auth-provider"
@@ -65,7 +64,6 @@ export default function RootLayout({
           </div>
           {/* Place Toaster outside other divs to avoid z-index issues */}
           <Toaster />
-          <ServiceWorkerRegistration />
           <LinkPrefetcher />
           <ImageOptimizer />
         </AuthProvider>
