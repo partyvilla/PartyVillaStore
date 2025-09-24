@@ -1,45 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { createBrowserClient } from "@/lib/database/supabase"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth/auth-provider"
+import { ProtectedRoute } from "@/components/auth/protected-route"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
-export default function AccountPage() {
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+function AccountPageContent() {
+  const { user, signOut } = useAuth()
   const router = useRouter()
-  const supabase = createBrowserClient()
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession()
-      
-      if (!data.session) {
-        router.push('/auth/login')
-        return
-      }
-      
-      setUser(data.session.user)
-      setLoading(false)
-    }
-
-    getUser()
-  }, [router, supabase.auth])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto py-8 max-w-3xl">
-        <div className="animate-pulse h-64 bg-gray-200 rounded-md"></div>
-      </div>
-    )
+    await signOut()
   }
 
   return (
@@ -92,5 +65,13 @@ export default function AccountPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <ProtectedRoute>
+      <AccountPageContent />
+    </ProtectedRoute>
   )
 }

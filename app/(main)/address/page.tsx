@@ -4,47 +4,34 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { createBrowserClient } from "@/lib/database/supabase"
-import { useRouter } from "next/navigation"
+import { useSupabase } from "@/hooks/use-supabase"
+import { useAuth } from "@/lib/auth/auth-provider"
+import { ProtectedRoute } from "@/components/auth/protected-route"
 
 interface UserProfile {
-  id?: string
   user_id: string
-  name?: string | null
-  phone?: string | null
-  address?: string | null
-  city?: string | null
-  state?: string | null
-  pincode?: string | null
-  role?: string
-  created_at?: string
-  updated_at?: string
+  name: string | null
+  phone: string | null
+  address: string | null
+  city: string | null
+  state: string | null
+  pincode: string | null
+  role: string
 }
 
-export default function AddressPage() {
+function AddressPageContent() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [user, setUser] = useState<any>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const router = useRouter()
-  const supabase = createBrowserClient()
+  const { user } = useAuth()
+  const supabase = useSupabase()
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession()
-      
-      if (!data.session) {
-        router.push('/auth/login')
-        return
-      }
-      
-      setUser(data.session.user)
-      fetchProfile(data.session.user.id)
+    if (user) {
+      fetchProfile(user.id)
     }
-
-    getUser()
-  }, [router, supabase.auth])
+  }, [user])
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -103,7 +90,8 @@ export default function AddressPage() {
     }
 
     try {      
-      const { data, error } = await supabase
+      // TODO: Fix database types - using any for now
+      const { data, error } = await (supabase as any)
         .from('profiles')
         .upsert(updatedProfile, {
           onConflict: 'user_id' // Use user_id for conflict resolution since it has unique constraint
@@ -129,12 +117,16 @@ export default function AddressPage() {
     return (
       <div className="container mx-auto py-8 max-w-3xl">
         <div className="animate-pulse h-64 bg-gray-200 rounded-md"></div>
+    </div>
+  )
+}
+
+  if (loading) {
+    return (
+      <div className="container mx-auto py-8 max-w-3xl">
+        <div className="animate-pulse h-64 bg-gray-200 rounded-md"></div>
       </div>
     )
-  }
-
-  if (!user) {
-    return null
   }
 
   return (
@@ -342,5 +334,13 @@ export default function AddressPage() {
         </Card>
       </div>
     </main>
+  )
+}
+
+export default function AddressPage() {
+  return (
+    <ProtectedRoute>
+      <AddressPageContent />
+    </ProtectedRoute>
   )
 }

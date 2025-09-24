@@ -5,8 +5,7 @@ import type { Database } from "@/lib/database/database.types"
 
 export async function GET() {
   try {
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore })
+    const supabase = createRouteHandlerClient<Database>({ cookies })
     
     // Check for existing users
     const { data, error } = await supabase.auth.admin.listUsers()

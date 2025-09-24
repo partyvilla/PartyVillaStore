@@ -4,42 +4,35 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { createBrowserClient } from "@/lib/database/supabase"
+import { useSupabase } from "@/hooks/use-supabase"
 import { useRouter } from "next/navigation"
 import { formatCurrency } from "@/lib/utils/currency"
 import { getStatusColor } from "@/lib/database/services/supabase-orders"
+import { useAuth } from "@/lib/auth/auth-provider"
+import { ProtectedRoute } from "@/components/auth/protected-route"
+import { useAuthenticatedFetch } from "@/hooks/use-authenticated-fetch"
 
-export default function OrdersPage() {
+function OrdersPageContent() {
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
-  const router = useRouter()
-  const supabase = createBrowserClient()
+  const { user } = useAuth()
+  const { fetchWithAuth } = useAuthenticatedFetch()
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession()
-      
-      if (!data.session) {
-        router.push('/auth/login')
-        return
-      }
-      
-      setUser(data.session.user)
+    if (user) {
       fetchOrders()
     }
-
-    getUser()
-  }, [router, supabase.auth])
+  }, [user])
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('/api/orders')
+      const response = await fetchWithAuth('/api/orders')
       if (response.ok) {
         const data = await response.json()
         setOrders(data)
       }
     } catch (error) {
+      console.error('Failed to fetch orders:', error)
     } finally {
       setLoading(false)
     }
@@ -140,5 +133,13 @@ export default function OrdersPage() {
         </Card>
       </div>
     </main>
+  )
+}
+
+export default function OrdersPage() {
+  return (
+    <ProtectedRoute>
+      <OrdersPageContent />
+    </ProtectedRoute>
   )
 }

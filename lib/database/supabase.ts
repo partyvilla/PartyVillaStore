@@ -1,46 +1,67 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { Database } from "@/lib/database/database.types"
+import { getAuthConfig, getStorageAdapter } from '@/lib/auth/session-storage'
+import { validateSupabaseConfig } from '@/lib/auth/config-validator'
 
-// Prevent multiple client instances in the browser
-let browserClientInstance: any = null
+// Environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-// Function to reset the browser client instance
+// UNIFIED SINGLETON - One instance for everything
+let GLOBAL_SUPABASE_INSTANCE: any = null
+
+// Reset helper (testing / manual hard reset)
 export const resetBrowserClient = () => {
-  if (typeof window !== 'undefined') {
-    browserClientInstance = null
-  }
+  GLOBAL_SUPABASE_INSTANCE = null
 }
 
-// For client components only - safe to use in auth provider
-export const createBrowserClient = () => {
-  if (typeof window !== 'undefined' && browserClientInstance) {
-    return browserClientInstance
-  }
-  
+// UNIFIED CLIENT CREATOR - Works for both browser and server
+const createUnifiedSupabaseClient = () => {
+  if (GLOBAL_SUPABASE_INSTANCE) return GLOBAL_SUPABASE_INSTANCE
+
   try {
-    // Create new instance for browser environment
-    browserClientInstance = createClientComponentClient<Database>()
-    
-    return browserClientInstance
+    if (typeof window !== 'undefined') {
+      try {
+        GLOBAL_SUPABASE_INSTANCE = createClientComponentClient<Database>()
+      } catch (_e) {
+        GLOBAL_SUPABASE_INSTANCE = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey, {
+          auth: {
+            ...getAuthConfig(),
+            storage: getStorageAdapter(),
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+            debug: false,
+          },
+          global: { headers: { 'X-Client-Info': 'partyvilla-store' } },
+        })
+      }
+    } else {
+      GLOBAL_SUPABASE_INSTANCE = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          ...getAuthConfig(),
+          storage: getStorageAdapter(),
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
+          debug: false,
+        },
+        global: { headers: { 'X-Client-Info': 'partyvilla-store' } },
+      })
+    }
   } catch (e) {
-    // Fallback to generic client
-    return createGenericClient()
+    console.error('[Supabase] Client creation failed', e)
+    throw e
   }
+
+  return GLOBAL_SUPABASE_INSTANCE
 }
 
-// Generic client for non-specific environments
-export const createGenericClient = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  
-  if (!url || !key) {
-    throw new Error('NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY env variables are required!')
-  }
-  
-  return createSupabaseClient<Database>(url, key)
-}
+// Export browser client (now uses unified)
+export const createBrowserClient = createUnifiedSupabaseClient
 
-// For backward compatibility
-export const createClient = createGenericClient
-export const supabase = createBrowserClient()
+// For backward compatibility - all use the unified client
+export const createGenericClient = createUnifiedSupabaseClient
+export const createClient = createUnifiedSupabaseClient
+export const supabase = createUnifiedSupabaseClient()

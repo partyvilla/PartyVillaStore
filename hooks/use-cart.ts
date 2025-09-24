@@ -2,8 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import useSWR from "swr";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useTabReactivation, useGlobalReactivation } from "./use-tab-visibility";
+import { useSupabase } from "@/hooks/use-supabase";
 
 export type CartItem = {
   id: string; // product_id
@@ -15,19 +14,21 @@ export type CartItem = {
   stock?: number; // Available stock for this product/variant
 };
 
-const supabase = createClientComponentClient();
+// Use unified supabase instance
+const supabaseSingleton = () => useSupabase();
 
 // Helper to get current user
 async function getUserId() {
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseSingleton().auth.getUser();
   return user?.id || null;
 }
 
 // Helper to get product stock
 async function getProductStock(productId: string, variant?: string) {
   try {
+    const supabase = supabaseSingleton();
     const { data: product, error } = await supabase
       .from('products')
       .select('variants')
@@ -71,6 +72,7 @@ async function getProductStock(productId: string, variant?: string) {
 async function fetchCart() {
   const user_id = await getUserId();
   if (!user_id) return [];
+  const supabase = supabaseSingleton();
   const { data, error } = await supabase
     .from("cart")
     .select("product_id, name, price, qty, img, variant")
@@ -97,16 +99,12 @@ async function fetchCart() {
 }
 
 export function useCart() {
+  const supabase = supabaseSingleton();
   const { data, mutate } = useSWR<CartItem[]>("cart-items", fetchCart, {
     fallbackData: [],
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
   });
-
-  // Handle tab reactivation - refresh cart data with medium priority
-  useTabReactivation(async () => {
-    await mutate()
-  }, [], 'medium')
 
   const items = data ?? [];
   const count = items.reduce((n: number, it: CartItem) => n + (it.qty || 0), 0);
@@ -201,7 +199,7 @@ export function useCart() {
         query = query.is("variant", null);
       }
       
-      const { error, data } = await query;
+  const { error, data } = await query;
       
       if (error) {
         throw new Error("Failed to remove item from cart");
@@ -314,9 +312,7 @@ export function useCart() {
   );
 
   // Refresh cart data (useful when stock levels might have changed)
-  const refreshCart = useCallback(() => {
-    mutate();
-  }, [mutate]);
+  const refreshCart = useCallback(() => { mutate(); }, [mutate]);
 
   return {
     items,

@@ -4,6 +4,7 @@ import { Space_Grotesk } from "next/font/google"
 import { DM_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
+// @ts-ignore - global CSS side-effect import
 import "./globals.css"
 import { SiteHeader } from "@/components/layout/site-header"
 import { CategoryNav } from "@/components/categories/category-nav" 
@@ -11,6 +12,7 @@ import { Footer } from "@/components/layout/footer"
 import { Toaster } from "@/components/ui/toaster"
 import LinkPrefetcher from "@/components/navigation/link-prefetcher"
 import ImageOptimizer from "@/components/media/image-optimizer"
+import AutoReloadOnReturn from "@/components/navigation/auto-reload-on-return"
 import { AuthProvider } from "@/lib/auth/auth-provider"
 
 export const metadata: Metadata = {
@@ -66,6 +68,7 @@ export default function RootLayout({
           <Toaster />
           <LinkPrefetcher />
           <ImageOptimizer />
+          <AutoReloadOnReturn />
         </AuthProvider>
       </body>
     </html>

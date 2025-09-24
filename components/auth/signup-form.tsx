@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-import { createBrowserClient } from '@/lib/database/supabase'
+import { useSupabase } from '@/hooks/use-supabase'
 
 export default function SignUpForm() {
   const [email, setEmail] = useState('')
@@ -20,7 +20,7 @@ export default function SignUpForm() {
   const router = useRouter()
   
   // Create the client using our utility function
-  const supabase = createBrowserClient()
+  const supabase = useSupabase()
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()

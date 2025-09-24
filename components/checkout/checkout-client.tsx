@@ -6,7 +6,7 @@ import { OrderSummary } from "@/components/checkout/order-summary"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useCart } from "@/hooks/use-cart"
-import { createBrowserClient } from "@/lib/database/supabase"
+import { useSupabase } from "@/hooks/use-supabase"
 
 interface UserProfile {
   id?: string
@@ -25,7 +25,7 @@ interface UserProfile {
 export function CheckoutClient() {
   const router = useRouter()
   const { items, clear } = useCart()
-  const supabase = createBrowserClient()
+  const supabase = useSupabase()
 
   const [pincode, setPincode] = useState("")
   const [pincodeAvailable, setPincodeAvailable] = useState<null | boolean>(null)
@@ -51,10 +51,10 @@ export function CheckoutClient() {
           if (data && !error) {
             setUserProfile(data)
             // Prefill pincode if available
-            if (data.pincode) {
-              setPincode(data.pincode)
+            if ((data as any).pincode) {
+              setPincode((data as any).pincode)
               // Check pincode availability automatically
-              checkPincodeAvailability(data.pincode)
+              checkPincodeAvailability((data as any).pincode)
             }
           }
         }

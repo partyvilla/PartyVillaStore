@@ -1,10 +1,11 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, useRef } from 'react'
-import { createBrowserClient } from '@/lib/database/supabase'
+import { useSupabase } from '@/hooks/use-supabase'
 import { useRouter } from 'next/navigation'
 import { Session, AuthChangeEvent } from '@supabase/supabase-js'
-import { useTabReactivation } from '@/hooks/use-tab-visibility'
+import { validateSession, clearSessionStorage } from '@/lib/auth/session-validator'
+import { getAuthConfig } from '@/lib/auth/session-storage'
 
 type User = {
   id: string
@@ -32,50 +33,90 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
-  const supabase = createBrowserClient()
+  const supabase = useSupabase()
   const subscriptionRef = useRef<any>(null)
   const isInitializedRef = useRef(false)
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const refreshInFlightRef = useRef<Promise<void> | null>(null)
+  const userRef = useRef<User | null>(null)
 
-  const refreshSession = async () => {
-    try {
-      setIsLoading(true)
-      
-      // Get the current session
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (!session) {
-        setUser(null)
-        setIsAdmin(false)
-        return
-      }
-      
-      // Set user data
-      setUser({
-        id: session.user.id,
-        email: session.user.email || '',
-      })
-      
-      // Check if user is admin based on email
-      const userIsAdmin = ADMIN_EMAILS.includes(session.user.email || '')
-      setIsAdmin(userIsAdmin)
-      
-      // Set admin role in the database if needed
-      if (userIsAdmin) {
-        try {
-          await supabase
-            .from('profiles')
-            .upsert({
-              id: session.user.id,
-              role: 'admin'
-            }, { onConflict: 'id' })
-        } catch (e) {
-          // Log but don't stop app flow if this fails
-        }
-      }
-    } catch (error) {
-    } finally {
-      setIsLoading(false)
+  // Keep ref in sync
+  useEffect(() => { userRef.current = user }, [user])
+
+  // Safety timeout to prevent infinite loading
+  const setLoadingWithTimeout = (loading: boolean) => {
+    // Avoid resetting timer if already loading to prevent perpetual extension
+    setIsLoading(prev => {
+      if (loading && prev) return prev
+      return loading
+    })
+    if (loading) {
+      if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current)
+      loadingTimeoutRef.current = setTimeout(() => {
+        console.warn('[Auth] Forced clear loading after timeout')
+        setIsLoading(false)
+      }, 10000)
+    } else if (!loading && loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current)
+      loadingTimeoutRef.current = null
     }
+  }
+
+  const recoverSession = async () => {
+    try {
+      // Use the enhanced session validator
+      const { valid, session, needsRefresh } = await validateSession(supabase)
+      
+      if (!valid) {
+        // Clear any invalid session data
+        const authConfig = getAuthConfig()
+        clearSessionStorage(authConfig.storageKey)
+        return null
+      }
+      
+      return session
+    } catch (error) {
+      return null
+    }
+  }
+
+  const refreshSession = async (isFromTabReactivation = false, reason: string = 'manual') => {
+    if (refreshInFlightRef.current) {
+      return refreshInFlightRef.current
+    }
+    const task = (async () => {
+      try {
+        console.debug('[Auth] refreshSession start', { isFromTabReactivation, hasUser: !!user, reason })
+        // If we already have a user, keep this silent (no loading spinner) even if event was SIGNED_IN again
+        if (!isFromTabReactivation && !user) {
+          setLoadingWithTimeout(true)
+        }
+        const timeout = new Promise<null>((resolve) => setTimeout(() => {
+          console.warn('[Auth] recoverSession timeout fallback triggered')
+          resolve(null)
+        }, 6000))
+        const session = await Promise.race([recoverSession(), timeout])
+        if (!session) {
+          setUser(null)
+          setIsAdmin(false)
+          setLoadingWithTimeout(false)
+          return
+        }
+        setUser({ id: session.user.id, email: session.user.email || '' })
+        const userIsAdmin = ADMIN_EMAILS.includes(session.user.email || '')
+        setIsAdmin(userIsAdmin)
+        if (userIsAdmin) {
+          // Optionally ensure role in background; ignore errors
+          // void supabase.from('profiles').upsert({ id: session.user.id, role: 'admin' }, { onConflict: 'id' })
+        }
+        setLoadingWithTimeout(false)
+      } catch (e) {
+        console.warn('[Auth] refreshSession error', e)
+        setLoadingWithTimeout(false)
+      }
+    })().finally(() => { refreshInFlightRef.current = null })
+    refreshInFlightRef.current = task
+    return task
   }
 
   const setupAuthListener = () => {
@@ -88,11 +129,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up new auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          await refreshSession()
-        } else if (event === 'SIGNED_OUT') {
+        console.debug('[Auth] onAuthStateChange', event, session?.user?.id)
+        const currentUser = userRef.current
+        if (event === 'SIGNED_OUT') {
           setUser(null)
           setIsAdmin(false)
+          setLoadingWithTimeout(false)
+          return
+        }
+        if (event === 'TOKEN_REFRESHED') {
+          await refreshSession(true, 'token-refreshed')
+          return
+        }
+        if (event === 'SIGNED_IN') {
+          // If we already had a user and same id, treat as redundant
+            if (currentUser && session?.user?.id === currentUser.id) {
+              console.debug('[Auth] Ignoring redundant SIGNED_IN for existing user')
+              return
+            }
+            await refreshSession(!!currentUser, 'signed-in')
+            return
+        }
+        if (event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
+          await refreshSession(!!currentUser, event.toLowerCase())
         }
       }
     )
@@ -101,40 +160,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return subscription
   }
 
-  const reinitializeAuth = async () => {
-    
-    try {
-      // First check if we can get current session
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error) {
-        // If there's an error, try to refresh the session
-        await supabase.auth.refreshSession()
-      }
-      
-      // Refresh our local session state
-      await refreshSession()
-      
-      // Re-setup auth listener with a small delay to ensure clean state
-      setTimeout(() => {
-        setupAuthListener()
-      }, 150)
-    } catch (error) {
-      // If everything fails, try one more session refresh
-      try {
-        await refreshSession()
-      } catch (e) {
-      }
-    }
-  }
+  // Removed reinitializeAuth (unused after refactor)
 
-  // Handle tab reactivation with high priority (auth should go first)
-  useTabReactivation(reinitializeAuth, [], 'high')
+  // Single lightweight visibility revalidator
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState !== 'visible') return
+      if (!userRef.current) return
+      // Proactively refresh if session is near expiry (within 2 mins)
+      supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
+        const expires = data.session?.expires_at || 0
+        const now = Math.floor(Date.now() / 1000)
+        if (expires && expires - now < 120) {
+          void refreshSession(true)
+        }
+      })
+    }
+    document.addEventListener('visibilitychange', handler)
+    return () => document.removeEventListener('visibilitychange', handler)
+  }, [user])
 
   useEffect(() => {
     // Initial session check and setup
     if (!isInitializedRef.current) {
-      refreshSession()
+      const initializeAuth = async () => {
+        try {
+          if (process.env.NODE_ENV !== 'production') console.debug('[Auth] initialize start')
+          // First try to recover any existing session
+          const session = await recoverSession()
+          if (session) {
+            await refreshSession(false) // Initial load, show loading
+          } else {
+            setLoadingWithTimeout(false)
+          }
+          if (process.env.NODE_ENV !== 'production') console.debug('[Auth] initialize end')
+        } catch (error) {
+          setLoadingWithTimeout(false)
+        }
+      }
+      
+      initializeAuth()
       setupAuthListener()
       isInitializedRef.current = true
     }
@@ -144,12 +209,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         subscriptionRef.current.unsubscribe()
         subscriptionRef.current = null
       }
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current)
+        loadingTimeoutRef.current = null
+      }
     }
   }, [])
 
   const signIn = async (email: string, password: string) => {
     try {
-      setIsLoading(true)
+      setLoadingWithTimeout(true)
       
       const { error } = await supabase.auth.signInWithPassword({
         email: email.trim().toLowerCase(),
@@ -159,24 +228,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error
       
       await refreshSession()
-      router.refresh()
+      // router.refresh() removed to avoid unnecessary full tree reload churn
     } catch (error: any) {
       throw error
     } finally {
-      setIsLoading(false)
+      setLoadingWithTimeout(false)
     }
   }
 
   const signOut = async () => {
     try {
-      setIsLoading(true)
+      setLoadingWithTimeout(true)
+      
+      // Clear session from Supabase
       await supabase.auth.signOut()
+      
+      // Clear local session storage
+      const authConfig = getAuthConfig()
+      clearSessionStorage(authConfig.storageKey)
+      
+      // Clear local state
       setUser(null)
       setIsAdmin(false)
-      router.refresh()
+      
+      // router.refresh() avoided here; local state already cleared
     } catch (error) {
+      // Silent error handling
     } finally {
-      setIsLoading(false)
+      setLoadingWithTimeout(false)
     }
   }
 
