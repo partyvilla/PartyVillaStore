@@ -1,6 +1,10 @@
 import { getProducts } from "@/lib/database/services/supabase-products"
 import { ProductList } from "@/components/admin/management/product-list"
 
+// Ensure this page is always dynamic and not statically generated
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function AdminProductsPage() {
   // Fetch products from the database
   const products = await getProducts()

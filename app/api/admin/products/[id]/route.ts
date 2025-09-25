@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = 'force-dynamic'
 import { createRouteHandler } from "@/lib/database/supabase-server";
 import {
   uploadImageToCloudinary,
@@ -66,7 +68,11 @@ export async function PUT(
       const product = await updateProduct(productId, {
         variants: body.variants,
       });
-      return NextResponse.json(product);
+      const res = NextResponse.json(product);
+      res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      res.headers.set('Pragma', 'no-cache')
+      res.headers.set('Expires', '0')
+      return res;
     }
 
     if (isJsonRequest && body && body.name) {
@@ -107,11 +113,15 @@ export async function PUT(
 
       try {
         const product = await updateProduct(productId, productData);
-        return NextResponse.json({
+        const res = NextResponse.json({
           success: true,
           product,
           message: "Product updated successfully",
         });
+        res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+        res.headers.set('Pragma', 'no-cache')
+        res.headers.set('Expires', '0')
+        return res;
       } catch (error: any) {
         return NextResponse.json(
           { error: error?.message || "Internal server error" },
@@ -236,11 +246,15 @@ export async function PUT(
 
       try {
         const product = await updateProduct(productId, productData);
-        return NextResponse.json({
+        const res = NextResponse.json({
           success: true,
           product,
           message: "Product updated successfully",
         });
+        res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+        res.headers.set('Pragma', 'no-cache')
+        res.headers.set('Expires', '0')
+        return res;
       } catch (error: any) {
         // Log full error details from Supabase/Postgres
         return NextResponse.json(
@@ -309,10 +323,14 @@ export async function DELETE(
     // Delete product from database
     await deleteProduct(productId);
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
       message: "Product deleted successfully",
     });
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    res.headers.set('Pragma', 'no-cache')
+    res.headers.set('Expires', '0')
+    return res;
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },

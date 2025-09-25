@@ -11,6 +11,9 @@ const ADMIN_EMAILS: string[] = process.env.ADMIN_EMAILS
   ]
 
 // GET /api/admin/products - List all products
+// Force dynamic for this route and disable ISR caching
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
     // Create a Supabase client that has access to the request context (cookies)
@@ -40,7 +43,11 @@ export async function GET(request: Request) {
     // Get all products
     const products = await getProducts()
     
-    return NextResponse.json(products)
+    const res = NextResponse.json(products)
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    res.headers.set('Pragma', 'no-cache')
+    res.headers.set('Expires', '0')
+    return res
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to fetch products' },
@@ -150,7 +157,11 @@ export async function POST(request: Request) {
       variants // array of objects
     }
     const newProduct = await createProduct(productData)
-    return NextResponse.json(newProduct, { status: 201 })
+    const res = NextResponse.json(newProduct, { status: 201 })
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    res.headers.set('Pragma', 'no-cache')
+    res.headers.set('Expires', '0')
+    return res
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to create product', details: error instanceof Error ? error.message : String(error) },

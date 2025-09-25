@@ -24,7 +24,12 @@ export function ProductList({ initialProducts }: ProductListProps) {
   const fetchProducts = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch('/api/admin/products')
+      const response = await fetch('/api/admin/products', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-store',
+        },
+      })
       const data = await response.json()
       
       if (response.ok) {
@@ -42,6 +47,12 @@ export function ProductList({ initialProducts }: ProductListProps) {
       setIsLoading(false)
     }
   }
+
+  // Always refetch on mount to avoid showing stale initial data that may have been statically rendered
+  useEffect(() => {
+    fetchProducts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleDelete = async (productId: string) => {
     if (!confirm('Are you sure you want to delete this product?')) {
