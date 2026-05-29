@@ -61,7 +61,7 @@ export function ProductCard({ product }: { product: Product }) {
   const isOutOfStock = !inStockVariant;
 
   return (
-    <div className="group h-full bg-white border border-primary/10 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/20 hover:-translate-y-1">
+    <div className="group h-full bg-white border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
       <div className="relative">
         <Link href={`/product/${id}`} prefetch={true}>
           <div className="relative overflow-hidden h-36 xs:h-40 sm:h-48">

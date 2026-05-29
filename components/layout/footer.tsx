@@ -6,15 +6,15 @@ export async function Footer() {
   const categories = await getCategoriesForFooter(4)
   
   return (
-    <footer className="w-full bg-white border-t border-gray-200">
+    <footer className="w-full bg-white border-t border-border">
       {/* Main Footer */}
-      <div className="py-6 border-t border-gray-100">
+      <div className="py-6 border-t border-border/50">
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid gap-6 md:grid-cols-4">
             {/* About */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-800">About PartyVilla</h3>
-              <p className="text-xs text-gray-600">
+              <h3 className="text-sm font-semibold text-foreground">About PartyVilla</h3>
+              <p className="text-xs text-foreground/60">
                 Your one-stop shop for all party supplies and festive decorations in India.
               </p>
               <div className="flex items-center gap-3 mt-3">
@@ -32,25 +32,25 @@ export async function Footer() {
             
             {/* Links */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-800">Quick Links</h3>
+              <h3 className="text-sm font-semibold text-foreground">Quick Links</h3>
               <ul className="space-y-1 text-xs">
                 <li>
-                  <Link href="/" className="text-gray-600 hover:text-primary">
+                  <Link href="/" className="text-foreground/60 hover:text-primary">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link href="/shop" className="text-gray-600 hover:text-primary">
+                  <Link href="/shop" className="text-foreground/60 hover:text-primary">
                     Shop
                   </Link>
                 </li>
                 <li>
-                  <Link href="/categories" className="text-gray-600 hover:text-primary">
+                  <Link href="/categories" className="text-foreground/60 hover:text-primary">
                     Categories
                   </Link>
                 </li>
                 <li>
-                  <Link href="/cart" className="text-gray-600 hover:text-primary">
+                  <Link href="/cart" className="text-foreground/60 hover:text-primary">
                     Cart
                   </Link>
                 </li>
@@ -59,11 +59,11 @@ export async function Footer() {
             
             {/* Categories */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-800">Categories</h3>
+              <h3 className="text-sm font-semibold text-foreground">Categories</h3>
               <ul className="space-y-1 text-xs">
                 {categories.map((category) => (
                   <li key={category.id}>
-                    <Link href={`/category/${category.slug}`} className="text-gray-600 hover:text-primary">
+                    <Link href={`/category/${category.slug}`} className="text-foreground/60 hover:text-primary">
                       {category.name}
                     </Link>
                   </li>
@@ -73,13 +73,13 @@ export async function Footer() {
             
             {/* Contact */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-gray-800">Contact Us</h3>
-              <address className="text-xs text-gray-600 not-italic space-y-1">
+              <h3 className="text-sm font-semibold text-foreground">Contact Us</h3>
+              <address className="text-xs text-foreground/60 not-italic space-y-1">
                 <p>Shop no. 15, Party Villa</p>
                 <p>Hong kong Arcade, Near Shiva Complex</p>
                 <p>Maharashtra - 410206</p>
               </address>
-              <p className="text-xs text-gray-600 pt-1">
+              <p className="text-xs text-foreground/60 pt-1">
                 <a href="mailto:contact@partyvilla.in" className="text-primary">
                   partyvilla.store@gmail.com
                 </a>
@@ -90,9 +90,9 @@ export async function Footer() {
       </div>
       
       {/* Copyright */}
-      <div className="py-3 border-t border-gray-100 bg-gray-50">
+      <div className="py-3 border-t border-border/50 bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row justify-center items-center gap-2">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-foreground/50">
             © {currentYear} PartyVilla. All rights reserved.
           </p>
         </div>

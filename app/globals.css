@@ -15,54 +15,54 @@
 
 /* Update semantic tokens to PartyVilla palette and add heading/body font setup */
 :root {
-  /* PartyVilla: Light theme tokens - Olive Green theme */
-  --background: #ffffff;
-  --foreground: #3d4c34; /* dark olive green text */
+  /* PartyVilla: Premium Pastel Light theme */
+  --background: #fffbf7; /* warm ivory/cream */
+  --foreground: #2d3436; /* deep charcoal */
 
-  --card: #f7f9f3;
-  --card-foreground: #3d4c34;
+  --card: #ffffff;
+  --card-foreground: #2d3436;
 
   --popover: #ffffff;
-  --popover-foreground: #3d4c34;
+  --popover-foreground: #2d3436;
 
-  --primary: #629539; /* olive green */
+  --primary: #e8734e; /* warm coral */
   --primary-foreground: #ffffff;
 
-  --secondary: #7e9146; /* lighter olive green */
-  --secondary-foreground: #ffffff;
+  --secondary: #f4d9d0; /* soft blush pink */
+  --secondary-foreground: #2d3436;
 
-  --muted: #f0f3e6; /* light olive background for muted surfaces */
-  --muted-foreground: #5a6851; /* muted olive text */
+  --muted: #e8f2f9; /* light sky blue for muted surfaces */
+  --muted-foreground: #6c5b52; /* warm brown/taupe text */
 
-  --accent: #cddba7; /* pale olive accent */
-  --accent-foreground: #3a4b30;
+  --accent: #f5d5b8; /* pastel peach */
+  --accent-foreground: #2d3436;
 
   --destructive: #e53e3e;
   --destructive-foreground: #ffffff;
 
-  --border: #c6d0b4;
+  --border: #e8dfd5; /* soft beige */
   --input: #ffffff;
-  --ring: rgba(91, 121, 66, 0.5); /* olive green ring */
+  --ring: rgba(232, 115, 78, 0.3); /* coral-based ring */
 
   /* Charts */
-  --chart-1: #a855f7;
-  --chart-2: #fbbf24;
-  --chart-3: #6b46c1;
+  --chart-1: #e8734e;
+  --chart-2: #f5d5b8;
+  --chart-3: #f4d9d0;
   --chart-4: #e53e3e;
-  --chart-5: #4a5568;
+  --chart-5: #6c5b52;
 
   /* Radius */
   --radius: 0.5rem;
 
   /* Sidebar */
-  --sidebar: #f9f5ff;
-  --sidebar-foreground: #6b46c1;
-  --sidebar-primary: #a855f7;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #2d3436;
+  --sidebar-primary: #e8734e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #fbbf24;
-  --sidebar-accent-foreground: #6b46c1;
-  --sidebar-border: #cbd5e0;
-  --sidebar-ring: rgba(168, 85, 247, 0.5);
+  --sidebar-accent: #f5d5b8;
+  --sidebar-accent-foreground: #2d3436;
+  --sidebar-border: #e8dfd5;
+  --sidebar-ring: rgba(232, 115, 78, 0.3);
 }
 
 .dark {

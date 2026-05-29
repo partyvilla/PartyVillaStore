@@ -42,14 +42,12 @@ export default function RootLayout({
       <body className="font-sans min-h-screen flex flex-col">
         <AuthProvider>
           <div className="min-h-screen w-full relative flex flex-col">
-            {/* Subtle gradient background */}
+            {/* Warm ivory/cream background */}
             <div
-              className="fixed inset-0 z-0 bg-white"
+              className="fixed inset-0 z-0 bg-background"
               style={{
                 backgroundImage: `
-                  linear-gradient(to bottom, rgba(247, 249, 243, 0.8) 0%, rgba(255, 255, 255, 1) 100%),
-                  radial-gradient(circle at top right, rgba(146, 184, 94, 0.1), transparent 60%),
-                  radial-gradient(circle at bottom left, rgba(146, 184, 94, 0.15), transparent 60%)
+                  linear-gradient(to bottom, rgba(255, 251, 247, 1) 0%, rgba(255, 255, 255, 0.5) 100%)
                 `,
                 backgroundAttachment: 'fixed',
               }}

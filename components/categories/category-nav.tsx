@@ -30,7 +30,7 @@ export function CategoryNav() {
   }, [])
   
   return (
-    <div className="w-full bg-white border-b border-primary/10 shadow-sm z-10">
+    <div className="w-full bg-white border-b border-border shadow-sm z-10">
       <div className="mx-auto max-w-6xl overflow-x-auto scrollbar-hide">
         <nav className="flex items-center py-2.5 gap-1.5 xs:gap-2 sm:gap-3 min-w-max">
           {isLoading ? (

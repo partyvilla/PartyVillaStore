@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/products/product-card"
 import { getTrendingProducts, Product } from "@/lib/database/services/supabase-products"
 import { getCategories } from "@/lib/database/services/supabase-categories"
+import { Zap, Lock, Award, Headphones } from "lucide-react"
 
 export default async function Page() {
   // Try to get categories from database, fall back to default
@@ -15,7 +16,7 @@ export default async function Page() {
   }
 
   const categoriesData = dbCategories
-  
+
   // Transform for CategoryShortcuts component
   const categories = categoriesData.map(cat => ({
     name: cat.name,
@@ -27,32 +28,37 @@ export default async function Page() {
   const trending = await getTrendingProducts(6)
 
   return (
-    <main className="space-y-6">
-      {/* Enhanced Hero Banner with more sophisticated design - mobile optimized */}
-      <section className="w-full relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
-        <div className="mx-auto max-w-6xl px-2 xs:px-4 py-4 sm:py-8 md:py-12">
-          <div className="grid items-center gap-4 sm:gap-6 md:grid-cols-2">
-            <div className="space-y-3 sm:space-y-4 order-2 md:order-1 z-10">
-              <div className="inline-block px-2 sm:px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                New Arrivals for September
+    <main className="space-y-0">
+      {/* Announcement Bar */}
+      <div className="w-full bg-accent text-foreground py-2 px-4 text-center text-sm font-medium">
+        <p>Free delivery on selected orders • New party collections available</p>
+      </div>
+
+      {/* Hero Section */}
+      <section className="w-full bg-gradient-to-b from-secondary to-background">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12 md:py-16">
+          <div className="grid items-center gap-6 sm:gap-8 md:grid-cols-2">
+            <div className="space-y-4 sm:space-y-6 order-2 md:order-1">
+              <div className="inline-block px-3 sm:px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wide">
+                Celebrate Every Moment
               </div>
-              <h1 className="text-pretty text-2xl sm:text-3xl font-bold tracking-tight text-primary md:text-5xl leading-tight">
-                Make Every <span className="text-secondary">Celebration</span> Special
+              <h1 className="text-pretty text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight">
+                Make Every Celebration Feel Beautifully Planned
               </h1>
-              <p className="text-gray-700 text-xs sm:text-sm leading-relaxed md:text-base max-w-md">
-                Elevate your events with our premium selection of balloons, decorations, and personalized party essentials.
+              <p className="text-foreground/70 text-sm sm:text-base leading-relaxed max-w-md">
+                Shop curated party supplies, gifts, decorations, balloons, and celebration essentials for every occasion.
               </p>
-              <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 pt-1 sm:pt-2">
-                <Button asChild className="bg-primary text-white hover:bg-primary/90 px-4 xs:px-6 sm:px-8 py-2 xs:py-4 sm:py-6 text-xs sm:text-sm rounded-md shadow-md hover:shadow-lg transition-all duration-200">
-                  <Link href="/shop" prefetch={true}>Shop Collection</Link>
+              <div className="flex items-center gap-3 sm:gap-4 pt-2 sm:pt-4">
+                <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-md shadow-md hover:shadow-lg transition-all duration-200">
+                  <Link href="/shop" prefetch={true}>Shop Now</Link>
+                </Button>
+                <Button asChild variant="outline" className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-md border-primary text-primary hover:bg-primary/5">
+                  <Link href="/shop" prefetch={true}>Explore Categories</Link>
                 </Button>
               </div>
             </div>
-            <div className="relative order-1 md:order-2 z-0">
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl"></div>
-              <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-secondary/10 rounded-full filter blur-3xl"></div>
-                <div className="relative rounded-lg overflow-hidden shadow-lg border border-primary/10">
+            <div className="relative order-1 md:order-2">
+              <div className="relative rounded-lg overflow-hidden shadow-lg">
                 <Image
                   src="/party-villa banner.webp"
                   alt="Festive celebration with party decorations and balloons"
@@ -61,48 +67,47 @@ export default async function Page() {
                   height={405}
                   priority
                 />
-                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Category Tiles with modern design - mobile optimized */}
-      <section className="py-6 sm:py-8 md:py-10">
-        <div className="mx-auto max-w-6xl px-2 xs:px-4">
-          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-4 sm:mb-6">
+      {/* Category Discovery Section */}
+      <section className="py-8 sm:py-12 md:py-16 bg-white">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-primary">Shop By Category</h2>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">Explore our curated collections</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Shop By Category</h2>
+              <p className="text-sm text-foreground/60 mt-1">Explore our curated collections</p>
             </div>
-            <Link 
-              href="/categories" 
-              className="text-primary text-xs sm:text-sm font-medium flex items-center group mt-2 xs:mt-0" 
+            <Link
+              href="/categories"
+              className="text-primary text-sm font-medium flex items-center group mt-3 xs:mt-0 hover:gap-2 transition-all"
               aria-label="View all categories"
             >
               <span>View all</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 gap-2 xs:gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {categories.map((cat) => (
               <Link key={cat.name} href={cat.href} className="focus:outline-none group">
-                <div className="bg-white border border-primary/10 rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 group-hover:transform group-hover:-translate-y-1">
-                  <div className="h-24 xs:h-28 sm:h-32 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
+                <div className="bg-white border border-border rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                  <div className="h-24 xs:h-28 sm:h-32 overflow-hidden relative bg-muted">
                     <Image
                       src={cat.img || "/placeholder.svg?height=128&width=240&query=category"}
                       alt={cat.imgAlt}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
                       width={240}
                       height={128}
                     />
                   </div>
-                  <div className="p-2 sm:p-3 text-center bg-gradient-to-b from-white to-primary/5">
-                    <h3 className="text-xs sm:text-sm font-semibold text-primary truncate">{cat.name}</h3>
+                  <div className="p-3 text-center">
+                    <h3 className="text-xs sm:text-sm font-semibold text-foreground truncate">{cat.name}</h3>
                   </div>
                 </div>
               </Link>
@@ -111,28 +116,27 @@ export default async function Page() {
         </div>
       </section>
 
-      {/* Enhanced Trending Products with sophisticated design - mobile optimized */}
-      <section className="py-6 sm:py-8 md:py-10 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
-        <div className="mx-auto max-w-6xl px-2 xs:px-4 relative z-10">
-          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-4 sm:mb-6">
+      {/* Featured Products Section */}
+      <section className="py-8 sm:py-12 md:py-16 bg-muted">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-primary">Trending Now</h2>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">Our most popular celebrations essentials</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Trending Now</h2>
+              <p className="text-sm text-foreground/60 mt-1">Our most popular celebration essentials</p>
             </div>
-            <Link 
-              href="/shop" 
-              className="text-primary text-xs sm:text-sm font-medium flex items-center group mt-2 xs:mt-0" 
+            <Link
+              href="/shop"
+              className="text-primary text-sm font-medium flex items-center group mt-3 xs:mt-0 hover:gap-2 transition-all"
               aria-label="View all products"
             >
               <span>View all</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 gap-2 xs:gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4">
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4">
             {trending.map((p: Product) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -140,8 +144,54 @@ export default async function Page() {
         </div>
       </section>
 
-      {/* Special Offer Banner */}
-      
+      {/* Trust & Benefits Section */}
+      <section className="py-8 sm:py-12 md:py-16 bg-white">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Why Choose PartyVilla?</h2>
+            <p className="text-sm sm:text-base text-foreground/60">Quality, convenience, and celebration expertise</p>
+          </div>
+
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-4">
+            {/* Fast Delivery */}
+            <div className="bg-secondary rounded-lg p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 mb-4">
+                <Zap className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              </div>
+              <h3 className="text-sm sm:text-base font-semibold text-foreground mb-2">Fast Delivery</h3>
+              <p className="text-xs sm:text-sm text-foreground/60">Quick shipping on all orders</p>
+            </div>
+
+            {/* Secure Checkout */}
+            <div className="bg-accent rounded-lg p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 mb-4">
+                <Lock className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              </div>
+              <h3 className="text-sm sm:text-base font-semibold text-foreground mb-2">Secure Checkout</h3>
+              <p className="text-xs sm:text-sm text-foreground/60">Your data is safe with us</p>
+            </div>
+
+            {/* Quality Products */}
+            <div className="bg-muted rounded-lg p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 mb-4">
+                <Award className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              </div>
+              <h3 className="text-sm sm:text-base font-semibold text-foreground mb-2">Quality Assured</h3>
+              <p className="text-xs sm:text-sm text-foreground/60">Premium party supplies for every event</p>
+            </div>
+
+            {/* Easy Support */}
+            <div className="bg-primary/5 rounded-lg p-6 sm:p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 mb-4">
+                <Headphones className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+              </div>
+              <h3 className="text-sm sm:text-base font-semibold text-foreground mb-2">Easy Support</h3>
+              <p className="text-xs sm:text-sm text-foreground/60">24/7 customer assistance</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   )
 }
+

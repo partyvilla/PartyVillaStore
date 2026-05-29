@@ -23,63 +23,63 @@ function MobileMenu({ onAuthPage, onClose }: { onAuthPage: boolean; onClose: () 
     <div className="border-t border-border bg-white md:hidden">
       <nav className="flex flex-col py-2">
         {isLoading ? (
-          <div className="px-4 py-3 text-center text-gray-500">Loading...</div>
+          <div className="px-4 py-3 text-center text-foreground/50">Loading...</div>
         ) : user ? (
           // Logged in user menu
           <>
             {isAdmin && (
-              <Link 
-                href="/admin" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+              <Link
+                href="/admin"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
                 onClick={onClose}
               >
                 <div className="w-6 h-6 flex items-center justify-center text-primary">⚙️</div>
-                <span className="text-gray-700">Dashboard</span>
+                <span className="text-foreground">Dashboard</span>
               </Link>
             )}
-            <Link 
-              href="/orders" 
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+            <Link
+              href="/orders"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
               onClick={onClose}
             >
               <div className="w-6 h-6 flex items-center justify-center text-primary">📦</div>
-              <span className="text-gray-700">My Orders</span>
+              <span className="text-foreground">My Orders</span>
             </Link>
-            <Link 
-              href="/address" 
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+            <Link
+              href="/address"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
               onClick={onClose}
             >
               <div className="w-6 h-6 flex items-center justify-center text-primary">📍</div>
-              <span className="text-gray-700">My Address</span>
+              <span className="text-foreground">My Address</span>
             </Link>
-            <button 
+            <button
               onClick={handleSignOut}
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 text-left w-full"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 text-left w-full"
             >
               <div className="w-6 h-6 flex items-center justify-center text-primary">👋</div>
-              <span className="text-gray-700">Sign Out</span>
+              <span className="text-foreground">Sign Out</span>
             </button>
           </>
         ) : (
           // Not logged in menu
           !onAuthPage && (
             <>
-              <Link 
-                href="/auth/login" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+              <Link
+                href="/auth/login"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
                 onClick={onClose}
               >
                 <div className="w-6 h-6 flex items-center justify-center text-primary">🔑</div>
-                <span className="text-gray-700">Sign In</span>
+                <span className="text-foreground">Sign In</span>
               </Link>
-              <Link 
-                href="/auth/signup" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3"
+              <Link
+                href="/auth/signup"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3"
                 onClick={onClose}
               >
                 <div className="w-6 h-6 flex items-center justify-center text-primary">👤</div>
-                <span className="text-gray-700">Sign Up</span>
+                <span className="text-foreground">Sign Up</span>
               </Link>
             </>
           )
@@ -97,7 +97,7 @@ export function SiteHeader() {
   const [locationPrompt, setLocationPrompt] = useState("Enter Location to check availability")
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">      
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       {/* Main header with shadow for depth */}
       <div className="bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 md:gap-4 md:py-4">
