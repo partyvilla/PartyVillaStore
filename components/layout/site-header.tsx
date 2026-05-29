@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { CartButton } from "../cart/cart-button"
-import { Menu, Search, X } from "lucide-react"
+import { Menu, Search, X, Settings, Package, MapPin, LogOut, LogIn, UserPlus } from "lucide-react"
 import { useState } from "react"
 import { UserNav } from "../auth/user-nav"
 import { SearchSuggestions } from "../search/search-suggestions"
@@ -30,35 +30,35 @@ function MobileMenu({ onAuthPage, onClose }: { onAuthPage: boolean; onClose: () 
             {isAdmin && (
               <Link
                 href="/admin"
-                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">⚙️</div>
-                <span className="text-foreground">Dashboard</span>
+                <Settings className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Dashboard</span>
               </Link>
             )}
             <Link
               href="/orders"
-              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
               onClick={onClose}
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">📦</div>
-              <span className="text-foreground">My Orders</span>
+              <Package className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">My Orders</span>
             </Link>
             <Link
               href="/address"
-              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
               onClick={onClose}
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">📍</div>
-              <span className="text-foreground">My Address</span>
+              <MapPin className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">My Address</span>
             </Link>
             <button
               onClick={handleSignOut}
-              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 text-left w-full"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 text-left w-full transition-colors"
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">👋</div>
-              <span className="text-foreground">Sign Out</span>
+              <LogOut className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">Sign Out</span>
             </button>
           </>
         ) : (
@@ -67,19 +67,19 @@ function MobileMenu({ onAuthPage, onClose }: { onAuthPage: boolean; onClose: () 
             <>
               <Link
                 href="/auth/login"
-                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">🔑</div>
-                <span className="text-foreground">Sign In</span>
+                <LogIn className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Sign In</span>
               </Link>
               <Link
                 href="/auth/signup"
-                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">👤</div>
-                <span className="text-foreground">Sign Up</span>
+                <UserPlus className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Sign Up</span>
               </Link>
             </>
           )
