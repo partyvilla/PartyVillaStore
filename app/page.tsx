@@ -27,44 +27,40 @@ export default async function Page() {
   return (
     <main>
       {/* ===== HERO SECTION ===== */}
-      <section className="relative bg-gradient-to-br from-secondary via-background to-background overflow-hidden">
-        <div className="mx-auto max-w-6xl px-4 py-20 md:py-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Hero Content */}
-            <div className="space-y-8 z-10">
+      <section
+        className="relative overflow-hidden py-20 md:py-32 bg-cover bg-center"
+        style={{
+          backgroundImage: 'url(/partyvilla.png)',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        {/* Overlay with filters */}
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-xs" />
+
+        <div className="mx-auto max-w-6xl px-4 relative z-10">
+          <div className="max-w-2xl">
+            <div className="space-y-8">
               <div className="space-y-4">
-                <p className="text-primary font-semibold text-sm tracking-widest uppercase">Welcome to PartyVilla</p>
-                <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
-                  Celebrate <span className="text-primary">Every Moment</span>
+                <p className="text-white font-semibold text-lg tracking-widest uppercase drop-shadow">Welcome to PartyVilla</p>
+                <h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
+                  <span className="text-white">Celebrate</span> <span className="text-primary">Every Moment</span>
                 </h1>
-                <p className="text-lg text-foreground/70 max-w-lg leading-relaxed">
+                <p className="text-lg text-gray-100 max-w-lg leading-relaxed drop-shadow">
                   Discover our curated collection of premium party supplies, decorations, and celebration essentials to make your events unforgettable.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button asChild size="lg" className="bg-primary/80 hover:bg-primary text-white">
                   <Link href="/shop">
                     Explore Collection
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5">
+                <Button asChild variant="outline" size="lg" className="border-white hover:bg-white/70 text-primary hover:text-primary">
                   <Link href="/categories">Browse Categories</Link>
                 </Button>
               </div>
-            </div>
-
-            {/* Hero Image */}
-            <div className="relative h-96 md:h-[500px]">
-              <Image
-                src="/party-villa banner.webp"
-                alt="PartyVilla celebration essentials"
-                className="w-full h-full object-cover rounded-2xl shadow-2xl"
-                width={500}
-                height={500}
-                priority
-              />
             </div>
           </div>
         </div>
