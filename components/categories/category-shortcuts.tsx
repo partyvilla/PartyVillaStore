@@ -28,7 +28,7 @@ export function CategoryShortcuts({ categories }: { categories: Category[] }) {
             aria-label={`Browse ${cat.name}`}
           >
             <img
-              src={cat.img || "/placeholder.svg?height=72&width=72&query=category"}
+              src={cat.img || "/placeholder.svg"}
               alt={cat.imgAlt}
               className="h-16 w-16 rounded-full border border-border object-cover transition-transform duration-200 ease-out group-hover:scale-105"
             />
