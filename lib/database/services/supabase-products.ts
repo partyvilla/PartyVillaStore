@@ -1,5 +1,6 @@
 import { createGenericClient } from "@/lib/database/supabase"
 import { Database } from "@/lib/database/database.types"
+import { toTitleCase } from "@/lib/utils/utils"
 
 type DatabaseProduct = Database['public']['Tables']['products']['Row']
 type ProductInsert = Database['public']['Tables']['products']['Insert']
@@ -89,11 +90,12 @@ export async function getProducts(options?: {
 
     return {
       ...product,
+      name: toTitleCase(product.name),
       img: product.image_url, // Map image_url to img for frontend compatibility
-      imgAlt: product.name, // Use name as alt text since we don't have img_alt field
+      imgAlt: toTitleCase(product.name), // Use name as alt text since we don't have img_alt field
       price, // Add computed price
       variants: product.variants ? (
-        typeof product.variants === 'string' 
+        typeof product.variants === 'string'
           ? (() => {
               try {
                 return JSON.parse(product.variants)
@@ -138,10 +140,11 @@ export async function getProductById(id: string) {
   // Transform the data to match frontend expectations
   return data ? {
     ...data,
+    name: toTitleCase(data.name),
     img: data.image_url, // Map image_url to img for frontend compatibility
-    imgAlt: data.name, // Use name as alt text since we don't have img_alt field
+    imgAlt: toTitleCase(data.name), // Use name as alt text since we don't have img_alt field
     variants: data.variants ? (
-      typeof data.variants === 'string' 
+      typeof data.variants === 'string'
         ? (() => {
             try {
               return JSON.parse(data.variants)
@@ -177,8 +180,9 @@ export async function getTrendingProducts(limit = 6) {
     // Transform the data to match frontend expectations
     return data.map(product => ({
       ...product,
+      name: toTitleCase(product.name),
       img: product.image_url, // Map image_url to img for frontend compatibility
-      imgAlt: product.name, // Use name as alt text since we don't have img_alt field
+      imgAlt: toTitleCase(product.name), // Use name as alt text since we don't have img_alt field
     }))
   } catch (err) {
     // Return empty array instead of fallback to mock data
@@ -190,12 +194,12 @@ export async function createProduct(product: ProductInsert & { img?: string, var
   // Get a fresh supabase client instance
   const { createRouteHandler } = await import('@/lib/database/supabase-server')
   const supabase = await createRouteHandler();
-  
+
   // Insert only fields present in DB schema
   const { data, error } = await supabase
     .from('products')
     .insert({
-      name: product.name,
+      name: toTitleCase(product.name),
       description: product.description || null,
       category: product.category,
       image_url: product.image_url ?? null, // array or null
@@ -214,20 +218,25 @@ export async function createProduct(product: ProductInsert & { img?: string, var
 export async function updateProduct(id: string, updates: ProductUpdate & { variants?: any }) {
   const { createServerClient } = await import('@/lib/database/supabase-server')
   const supabase = await createServerClient()
-  
+
   // Handle variants and image_url - keep arrays as arrays for JSONB storage
   const updateData = { ...updates }
-  
+
+  // Transform product name if being updated
+  if (updateData.name) {
+    updateData.name = toTitleCase(updateData.name)
+  }
+
   // Keep variants as array for jsonb storage
   if (updateData.variants !== undefined) {
     updateData.variants = Array.isArray(updateData.variants) ? updateData.variants : null
   }
-  
+
   // Keep image_url as array for json storage
   if (updateData.image_url !== undefined) {
     updateData.image_url = Array.isArray(updateData.image_url) ? updateData.image_url : updateData.image_url
   }
-  
+
   const { data, error } = await supabase
     .from('products')
     .update(updateData)

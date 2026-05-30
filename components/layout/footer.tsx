@@ -97,7 +97,7 @@ export async function Footer() {
             <div className="space-y-4">
               <h3 className="font-semibold text-foreground">Newsletter</h3>
               <p className="text-sm text-foreground/60">Subscribe for updates and exclusive offers</p>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-col">
                 <input
                   type="email"
                   placeholder="Your email"

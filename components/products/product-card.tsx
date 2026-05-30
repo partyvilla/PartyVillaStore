@@ -89,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
 
       {/* Content Container */}
-      <div className="flex flex-col gap-4 flex-grow p-4">
+      <div className="flex flex-col gap-2 flex-grow p-3">
         {/* Product Info */}
         <Link href={`/product/${id}`} className="group flex-grow">
           <h3 className="line-clamp-2 text-sm font-semibold text-foreground group-hover:text-primary transition-colors leading-snug">
@@ -98,7 +98,7 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
 
         {/* Price and Stock */}
-        <div className="space-y-2 border-t border-border/50 pt-3">
+        <div className="space-y-2 border-t border-border/50 pt-1">
           <p className="text-lg font-bold text-primary">
             {formatCurrency(displayPrice)}
           </p>

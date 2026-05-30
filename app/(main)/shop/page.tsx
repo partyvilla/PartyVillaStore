@@ -61,7 +61,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
 
       {/* Main Content */}
       <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <div className="flex gap-8 lg:gap-12">
+        <div className="flex gap-8 lg:gap-12 flex-col lg:flex-row">
           {/* Filters Sidebar (Desktop) */}
           <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white rounded-xl border border-border p-6 sticky top-24 h-fit">
@@ -98,7 +98,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
           <div className="flex-1 min-w-0">
             {products.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {products.map((product) => (
+                {products.map((product: any) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>

@@ -57,7 +57,7 @@ export default async function Page() {
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-white hover:bg-white/70 text-primary hover:text-primary">
+                <Button asChild variant="outline" size="lg" className="border-white hover:bg-white/7x0 text-primary hover:text-primary">
                   <Link href="/categories">Browse Categories</Link>
                 </Button>
               </div>
