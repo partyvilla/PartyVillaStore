@@ -1,25 +1,27 @@
 import Link from "next/link"
 import { CartClient } from "@/components/cart/cart-client"
+import { ChevronRight } from "lucide-react"
 
 export default function CartPage() {
   return (
-    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 md:space-y-8 md:py-8">
-      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
-        <ol className="flex items-center gap-2">
-          <li>
-            <Link href="/" className="hover:underline">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li aria-current="page" className="text-foreground">
-            Cart
-          </li>
-        </ol>
-      </nav>
+    <main>
+      {/* Header */}
+      <div className="bg-muted/50 py-8">
+        <div className="mx-auto max-w-6xl px-4">
+          <nav className="flex items-center gap-2 text-sm mb-4">
+            <Link href="/" className="text-foreground/60 hover:text-primary transition-colors">Home</Link>
+            <ChevronRight className="w-4 h-4 text-foreground/40" />
+            <span className="text-foreground font-semibold">Shopping Cart</span>
+          </nav>
+          <h1 className="text-4xl font-bold text-foreground">Your Cart</h1>
+        </div>
+      </div>
 
-      <h1 className="text-pretty text-2xl font-semibold md:text-3xl">Your Cart</h1>
-      <CartClient />
+      {/* Content */}
+      <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+        <CartClient />
+      </div>
     </main>
   )
 }
+

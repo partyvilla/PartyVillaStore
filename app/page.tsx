@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/products/product-card"
 import { getTrendingProducts, Product } from "@/lib/database/services/supabase-products"
 import { getCategories } from "@/lib/database/services/supabase-categories"
+import { Truck, Lock, CheckCircle, Headphones, ArrowRight } from "lucide-react"
 
 export default async function Page() {
-  // Try to get categories from database, fall back to default
   let dbCategories: Awaited<ReturnType<typeof getCategories>> = []
   try {
     dbCategories = await getCategories()
@@ -15,8 +15,6 @@ export default async function Page() {
   }
 
   const categoriesData = dbCategories
-  
-  // Transform for CategoryShortcuts component
   const categories = categoriesData.map(cat => ({
     name: cat.name,
     href: `/category/${cat.slug}`,
@@ -24,124 +22,175 @@ export default async function Page() {
     img: cat.image || "/placeholder.svg?height=72&width=72&query=category",
   }))
 
-  const trending = await getTrendingProducts(6)
+  const trending = await getTrendingProducts(8)
 
   return (
-    <main className="space-y-6">
-      {/* Enhanced Hero Banner with more sophisticated design - mobile optimized */}
-      <section className="w-full relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
-        <div className="mx-auto max-w-6xl px-2 xs:px-4 py-4 sm:py-8 md:py-12">
-          <div className="grid items-center gap-4 sm:gap-6 md:grid-cols-2">
-            <div className="space-y-3 sm:space-y-4 order-2 md:order-1 z-10">
-              <div className="inline-block px-2 sm:px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                New Arrivals for September
+    <main>
+      {/* ===== HERO SECTION ===== */}
+      <section
+        className="relative overflow-hidden py-20 md:py-32 bg-cover bg-center"
+        style={{
+          backgroundImage: 'url(/partyvilla.png)',
+          backgroundAttachment: 'fixed',
+        }}
+      >
+        {/* Overlay with filters */}
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-xs" />
+
+        <div className="mx-auto max-w-6xl px-4 relative z-10">
+          <div className="max-w-2xl">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <p className="text-white font-semibold text-lg tracking-widest uppercase drop-shadow">Welcome to PartyVilla</p>
+                <h1 className="text-5xl md:text-6xl font-bold leading-tight drop-shadow-lg">
+                  <span className="text-white">Celebrate</span> <span className="text-primary">Every Moment</span>
+                </h1>
+                <p className="text-lg text-gray-100 max-w-lg leading-relaxed drop-shadow">
+                  Discover our curated collection of premium party supplies, decorations, and celebration essentials to make your events unforgettable.
+                </p>
               </div>
-              <h1 className="text-pretty text-2xl sm:text-3xl font-bold tracking-tight text-primary md:text-5xl leading-tight">
-                Make Every <span className="text-secondary">Celebration</span> Special
-              </h1>
-              <p className="text-gray-700 text-xs sm:text-sm leading-relaxed md:text-base max-w-md">
-                Elevate your events with our premium selection of balloons, decorations, and personalized party essentials.
-              </p>
-              <div className="flex items-center gap-2 xs:gap-3 sm:gap-4 pt-1 sm:pt-2">
-                <Button asChild className="bg-primary text-white hover:bg-primary/90 px-4 xs:px-6 sm:px-8 py-2 xs:py-4 sm:py-6 text-xs sm:text-sm rounded-md shadow-md hover:shadow-lg transition-all duration-200">
-                  <Link href="/shop" prefetch={true}>Shop Collection</Link>
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button asChild size="lg" className="bg-primary/80 hover:bg-primary text-white">
+                  <Link href="/shop">
+                    Explore Collection
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="border-white hover:bg-white/7x0 text-primary hover:text-primary">
+                  <Link href="/categories">Browse Categories</Link>
                 </Button>
               </div>
             </div>
-            <div className="relative order-1 md:order-2 z-0">
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full filter blur-3xl"></div>
-              <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-secondary/10 rounded-full filter blur-3xl"></div>
-                <div className="relative rounded-lg overflow-hidden shadow-lg border border-primary/10">
-                <Image
-                  src="/party-villa banner.webp"
-                  alt="Festive celebration with party decorations and balloons"
-                  className="w-full object-cover h-60 md:h-[405px]"
-                  width={1200}
-                  height={405}
-                  priority
-                />
-                </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Category Tiles with modern design - mobile optimized */}
-      <section className="py-6 sm:py-8 md:py-10">
-        <div className="mx-auto max-w-6xl px-2 xs:px-4">
-          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-4 sm:mb-6">
+      {/* ===== CATEGORIES SECTION ===== */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex items-end justify-between mb-12">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-primary">Shop By Category</h2>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">Explore our curated collections</p>
+              <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Shop Smart</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground">Browse by Category</h2>
             </div>
-            <Link 
-              href="/categories" 
-              className="text-primary text-xs sm:text-sm font-medium flex items-center group mt-2 xs:mt-0" 
-              aria-label="View all categories"
-            >
-              <span>View all</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+            <Link href="/categories" className="hidden md:flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold">
+              View All <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 gap-2 xs:gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {categories.map((cat) => (
-              <Link key={cat.name} href={cat.href} className="focus:outline-none group">
-                <div className="bg-white border border-primary/10 rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/20 group-hover:transform group-hover:-translate-y-1">
-                  <div className="h-24 xs:h-28 sm:h-32 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
-                    <Image
-                      src={cat.img || "/placeholder.svg?height=128&width=240&query=category"}
-                      alt={cat.imgAlt}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                      width={240}
-                      height={128}
-                    />
-                  </div>
-                  <div className="p-2 sm:p-3 text-center bg-gradient-to-b from-white to-primary/5">
-                    <h3 className="text-xs sm:text-sm font-semibold text-primary truncate">{cat.name}</h3>
-                  </div>
+              <Link key={cat.name} href={cat.href} className="group">
+                <div className="relative overflow-hidden rounded-xl bg-muted aspect-square mb-3 shadow-sm hover:shadow-lg transition-all duration-300">
+                  <Image
+                    src={cat.img || "/placeholder.svg?height=240&width=240&query=category"}
+                    alt={cat.imgAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    width={240}
+                    height={240}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                 </div>
+                <h3 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{cat.name}</h3>
               </Link>
             ))}
           </div>
+
+          <Link href="/categories" className="md:hidden flex items-center justify-center gap-2 text-primary hover:gap-3 transition-all font-semibold mt-8">
+            View All Categories <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Enhanced Trending Products with sophisticated design - mobile optimized */}
-      <section className="py-6 sm:py-8 md:py-10 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
-        <div className="mx-auto max-w-6xl px-2 xs:px-4 relative z-10">
-          <div className="flex flex-col xs:flex-row xs:items-center justify-between mb-4 sm:mb-6">
+      {/* ===== FEATURED PRODUCTS SECTION ===== */}
+      <section className="bg-muted py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex items-end justify-between mb-12">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-primary">Trending Now</h2>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">Our most popular celebrations essentials</p>
+              <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Trending Now</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground">Popular Picks</h2>
             </div>
-            <Link 
-              href="/shop" 
-              className="text-primary text-xs sm:text-sm font-medium flex items-center group mt-2 xs:mt-0" 
-              aria-label="View all products"
-            >
-              <span>View all</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+            <Link href="/shop" className="hidden md:flex items-center gap-2 text-primary hover:gap-3 transition-all font-semibold">
+              Shop All <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 gap-2 xs:gap-3 sm:gap-4 sm:grid-cols-3 md:grid-cols-4">
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {trending.map((p: Product) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
+
+          <Link href="/shop" className="md:hidden flex items-center justify-center gap-2 text-primary hover:gap-3 transition-all font-semibold mt-8">
+            Shop All Products <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Special Offer Banner */}
-      
+      {/* ===== VALUE PROPOSITION SECTION ===== */}
+      <section className="bg-white py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center mb-16">
+            <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Why Choose Us</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Premium Quality & Service</h2>
+            <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
+              We're committed to making your celebrations special with exceptional products and dedicated customer support
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {/* Fast Delivery */}
+            <div className="bg-secondary rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <Truck className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Fast Delivery</h3>
+              <p className="text-sm text-foreground/60">Quick shipping on all your party supplies</p>
+            </div>
+
+            {/* Secure Checkout */}
+            <div className="bg-accent rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <Lock className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Secure Payment</h3>
+              <p className="text-sm text-foreground/60">Your data is protected with us</p>
+            </div>
+
+            {/* Quality Assured */}
+            <div className="bg-muted rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <CheckCircle className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Premium Quality</h3>
+              <p className="text-sm text-foreground/60">Curated selection for your special occasions</p>
+            </div>
+
+            {/* 24/7 Support */}
+            <div className="bg-primary/5 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <Headphones className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">Expert Support</h3>
+              <p className="text-sm text-foreground/60">Dedicated team ready to help</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CTA SECTION ===== */}
+      <section className="bg-gradient-to-r from-primary/10 via-secondary to-accent/20 py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Ready to Celebrate?</h2>
+          <p className="text-lg text-foreground/70 mb-8">Start shopping and create memories with PartyVilla</p>
+          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Link href="/shop">Shop Now</Link>
+          </Button>
+        </div>
+      </section>
     </main>
   )
 }
+
+

@@ -4,6 +4,7 @@ import { Metadata } from "next"
 import { ProductCard } from "@/components/products/product-card"
 import { getProducts } from "@/lib/database/services/supabase-products"
 import { CollapsibleFilters } from "@/components/search/collapsible-filters"
+import { ChevronRight, Search } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Shop | PartyVilla",
@@ -28,7 +29,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
   const max = Number(toStringParam(awaitedSearchParams?.max) || "")
   const minNum = Number.isFinite(min) ? min : undefined
   const maxNum = Number.isFinite(max) ? max : undefined
-  
+
   const products = await getProducts({
     q,
     min: minNum,
@@ -37,58 +38,80 @@ export default async function ShopPage({ searchParams }: PageProps) {
   })
 
   return (
-    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 md:space-y-8 md:py-8">
-      {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
-        <ol className="flex items-center gap-2">
-          <li>
-            <Link href="/" className="hover:underline">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li aria-current="page" className="text-foreground">
-            Shop
-          </li>
-        </ol>
-      </nav>
+    <main>
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-secondary to-background py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-4">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm mb-6">
+            <Link href="/" className="text-foreground/60 hover:text-primary transition-colors">Home</Link>
+            <ChevronRight className="w-4 h-4 text-foreground/40" />
+            <span className="text-foreground font-semibold">Shop</span>
+          </nav>
 
-      {/* Heading + count */}
-      <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
-        <h1 className="text-pretty text-2xl font-semibold md:text-3xl">Shop Our Collection</h1>
-        <p className="text-sm text-muted-foreground">
-          {products.length} item{products.length === 1 ? "" : "s"}
-        </p>
+          <div className="space-y-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground">Our Collection</h1>
+            <p className="text-lg text-foreground/70">Discover our entire range of premium party supplies and celebration essentials</p>
+            <p className="text-sm text-foreground/60 font-medium">
+              {products.length} product{products.length !== 1 ? 's' : ''} available
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Filters */}
-      <CollapsibleFilters 
-        defaultValues={{
-          q,
-          min: minNum,
-          max: maxNum,
-          sort
-        }}
-        isShopPage={true}
-      />
+      {/* Main Content */}
+      <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+        <div className="flex gap-8 lg:gap-12 flex-col lg:flex-row">
+          {/* Filters Sidebar (Desktop) */}
+          <div className="hidden lg:block w-80 flex-shrink-0">
+            <div className="bg-white rounded-xl border border-border p-6 sticky top-24 h-fit">
+              <h2 className="font-semibold text-foreground mb-6 flex items-center gap-2">
+                <Search className="w-5 h-5" />
+                Filters
+              </h2>
+              <CollapsibleFilters
+                defaultValues={{
+                  q,
+                  min: minNum,
+                  max: maxNum,
+                  sort
+                }}
+                isShopPage={true}
+              />
+            </div>
+          </div>
 
-      {/* Products grid */}
-      <section aria-labelledby="products-heading">
-        <h2 id="products-heading" className="sr-only">
-          Products
-        </h2>
-        {products.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          {/* Mobile Filters */}
+          <div className="lg:hidden mb-6 w-full">
+            <CollapsibleFilters
+              defaultValues={{
+                q,
+                min: minNum,
+                max: maxNum,
+                sort
+              }}
+              isShopPage={true}
+            />
           </div>
-        ) : (
-          <div className="rounded-lg border border-border bg-card p-8 text-center">
-            <p className="text-muted-foreground">No products found.</p>
+
+          {/* Products Grid */}
+          <div className="flex-1 min-w-0">
+            {products.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {products.map((product: any) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-border p-12 text-center">
+                <Search className="w-16 h-16 text-foreground/20 mx-auto mb-4" />
+                <p className="text-lg text-foreground/60">No products found.</p>
+                <p className="text-sm text-foreground/40 mt-2">Try adjusting your filters to find what you're looking for.</p>
+              </div>
+            )}
           </div>
-        )}
-      </section>
+        </div>
+      </div>
     </main>
   )
 }

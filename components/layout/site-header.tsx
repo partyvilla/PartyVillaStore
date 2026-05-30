@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { CartButton } from "../cart/cart-button"
-import { Menu, Search, X } from "lucide-react"
+import { Menu, Search, X, Settings, Package, MapPin, LogOut, LogIn, UserPlus } from "lucide-react"
 import { useState } from "react"
 import { UserNav } from "../auth/user-nav"
 import { SearchSuggestions } from "../search/search-suggestions"
@@ -23,63 +23,63 @@ function MobileMenu({ onAuthPage, onClose }: { onAuthPage: boolean; onClose: () 
     <div className="border-t border-border bg-white md:hidden">
       <nav className="flex flex-col py-2">
         {isLoading ? (
-          <div className="px-4 py-3 text-center text-gray-500">Loading...</div>
+          <div className="px-4 py-3 text-center text-foreground/50">Loading...</div>
         ) : user ? (
           // Logged in user menu
           <>
             {isAdmin && (
-              <Link 
-                href="/admin" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+              <Link
+                href="/admin"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">⚙️</div>
-                <span className="text-gray-700">Dashboard</span>
+                <Settings className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Dashboard</span>
               </Link>
             )}
-            <Link 
-              href="/orders" 
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+            <Link
+              href="/orders"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
               onClick={onClose}
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">📦</div>
-              <span className="text-gray-700">My Orders</span>
+              <Package className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">My Orders</span>
             </Link>
-            <Link 
-              href="/address" 
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+            <Link
+              href="/address"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
               onClick={onClose}
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">📍</div>
-              <span className="text-gray-700">My Address</span>
+              <MapPin className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">My Address</span>
             </Link>
-            <button 
+            <button
               onClick={handleSignOut}
-              className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 text-left w-full"
+              className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 text-left w-full transition-colors"
             >
-              <div className="w-6 h-6 flex items-center justify-center text-primary">👋</div>
-              <span className="text-gray-700">Sign Out</span>
+              <LogOut className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">Sign Out</span>
             </button>
           </>
         ) : (
           // Not logged in menu
           !onAuthPage && (
             <>
-              <Link 
-                href="/auth/login" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100"
+              <Link
+                href="/auth/login"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 border-b border-border transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">🔑</div>
-                <span className="text-gray-700">Sign In</span>
+                <LogIn className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Sign In</span>
               </Link>
-              <Link 
-                href="/auth/signup" 
-                className="px-4 py-3 hover:bg-gray-50 flex items-center gap-3"
+              <Link
+                href="/auth/signup"
+                className="px-4 py-3 hover:bg-muted/40 flex items-center gap-3 transition-colors"
                 onClick={onClose}
               >
-                <div className="w-6 h-6 flex items-center justify-center text-primary">👤</div>
-                <span className="text-gray-700">Sign Up</span>
+                <UserPlus className="w-5 h-5 text-primary" />
+                <span className="text-foreground font-medium">Sign Up</span>
               </Link>
             </>
           )
@@ -97,13 +97,13 @@ export function SiteHeader() {
   const [locationPrompt, setLocationPrompt] = useState("Enter Location to check availability")
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">      
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       {/* Main header with shadow for depth */}
       <div className="bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 md:gap-4 md:py-4">
           <div className="flex items-center gap-2">
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden flex items-center justify-center p-1 rounded-md"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
@@ -114,15 +114,12 @@ export function SiteHeader() {
                 <Menu className="h-5 w-5 text-primary" />
               )}
             </button>
-            
+
             {/* Enhanced Brand with subtle design elements */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-1" prefetch={true}>
                 <div className="relative">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-primary">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" 
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  {/* add a better logo (TODO) */}
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg sm:text-xl font-bold tracking-tight whitespace-nowrap text-primary leading-none">
@@ -145,36 +142,36 @@ export function SiteHeader() {
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Mobile Search Toggle */}
-            <button 
+            <button
               className="p-1 md:hidden"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               aria-label={isSearchOpen ? "Close search" : "Open search"}
             >
               <Search className="h-5 w-5 text-primary" />
             </button>
-            
+
             {!onAuthPage && <UserNav />}
             <CartButton />
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Search - Expandable */}
       {isSearchOpen && (
         <div className="px-4 py-3 border-t border-border bg-white md:hidden">
-          <SearchSuggestions 
-            placeholder="Search products..." 
+          <SearchSuggestions
+            placeholder="Search products..."
             isMobile={true}
             onSubmit={() => setIsSearchOpen(false)}
           />
         </div>
       )}
-      
+
       {/* Mobile Menu - Expandable */}
       {isMobileMenuOpen && (
-        <MobileMenu 
-          onAuthPage={onAuthPage} 
-          onClose={() => setIsMobileMenuOpen(false)} 
+        <MobileMenu
+          onAuthPage={onAuthPage}
+          onClose={() => setIsMobileMenuOpen(false)}
         />
       )}
     </header>

@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/database/supabase";
+import { toTitleCase } from "@/lib/utils/utils";
 
 export type Category = {
   id: number;
@@ -38,7 +39,10 @@ export async function getCategories(): Promise<Category[]> {
     return [];
   }
 
-  return (data as Category[]) || [];
+  return (data as Category[])?.map(cat => ({
+    ...cat,
+    name: toTitleCase(cat.name)
+  })) || [];
 }
 
 /**
@@ -60,7 +64,10 @@ export async function getCategoriesForFooter(
 
   const categories = (data as Category[]) || [];
 
-  return categories;
+  return categories.map(cat => ({
+    ...cat,
+    name: toTitleCase(cat.name)
+  }));
 }
 
 /**
@@ -121,13 +128,15 @@ export async function createCategory(
         return { data: null, error: retryError.message };
       }
 
-      return { data: retryData as Category, error: null };
+      const transformedData = retryData as Category;
+      return { data: { ...transformedData, name: toTitleCase(transformedData.name) }, error: null };
     }
 
     return { data: null, error: error.message };
   }
 
-  return { data: data as Category, error: null };
+  const transformedData = data as Category;
+  return { data: { ...transformedData, name: toTitleCase(transformedData.name) }, error: null };
 }
 
 /**
@@ -162,7 +171,8 @@ export async function updateCategory(
     return { data: null, error: error.message };
   }
 
-  return { data: data as Category, error: null };
+  const transformedData = data as Category;
+  return { data: { ...transformedData, name: toTitleCase(transformedData.name) }, error: null };
 }
 
 /**
@@ -243,5 +253,6 @@ export async function getCategoryBySlug(slug: string) {
     return null;
   }
 
-  return data as Category;
+  const category = data as Category;
+  return { ...category, name: toTitleCase(category.name) };
 }
