@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
     if (img && typeof img === 'string' && img.trim() !== '') {
       return img;
     }
-    return "/placeholder.svg?height=300&width=300&query=product";
+    return "/placeholder.svg";
   };
 
   const displayImg = getValidImageUrl();
@@ -62,7 +62,7 @@ export function ProductCard({ product }: { product: Product }) {
       <Link href={`/product/${id}`} prefetch={true} className="relative overflow-hidden bg-muted flex-shrink-0">
         <div className="relative w-full aspect-square">
           <Image
-            src={imageError ? "/placeholder.svg?height=300&width=300&query=product" : displayImg}
+            src={imageError ? "/placeholder.svg" : displayImg}
             alt={imgAlt || name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             fill

@@ -19,7 +19,7 @@ export default async function Page() {
     name: cat.name,
     href: `/category/${cat.slug}`,
     imgAlt: `${cat.name} products`,
-    img: cat.image || "/placeholder.svg?height=72&width=72&query=category",
+    img: cat.image || "/placeholder.svg",
   }))
 
   const trending = await getTrendingProducts(8)
@@ -84,7 +84,7 @@ export default async function Page() {
               <Link key={cat.name} href={cat.href} className="group">
                 <div className="relative overflow-hidden rounded-xl bg-muted aspect-square mb-3 shadow-sm hover:shadow-lg transition-all duration-300">
                   <Image
-                    src={cat.img || "/placeholder.svg?height=240&width=240&query=category"}
+                    src={cat.img || "/placeholder.svg"}
                     alt={cat.imgAlt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     width={240}

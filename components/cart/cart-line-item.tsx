@@ -22,7 +22,7 @@ export function CartLineItem({ item }: { item: CartItem }) {
     if (typeof item.img === 'string' && item.img.trim() !== '') {
       return item.img
     }
-    return "/placeholder.svg?height=64&width=64&query=cart item"
+    return "/placeholder.svg"
   }
 
   const imgSrc = getValidImageUrl()
