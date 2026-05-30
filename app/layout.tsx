@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "PartyVilla — Gifts & Party Supplies",
   description: "Buy balloons, decorations, gifts, candles, and more. Fast, festive, and mobile-first shopping.",
   generator: "v0.app",
+  icons: {
+    icon: "/favicon.png",
+  },
 }
 
 const spaceGrotesk = Space_Grotesk({

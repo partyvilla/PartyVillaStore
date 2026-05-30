@@ -103,7 +103,7 @@ export function SiteHeader() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 md:gap-4 md:py-4">
           <div className="flex items-center gap-2">
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden flex items-center justify-center p-1 rounded-md"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
@@ -114,15 +114,12 @@ export function SiteHeader() {
                 <Menu className="h-5 w-5 text-primary" />
               )}
             </button>
-            
+
             {/* Enhanced Brand with subtle design elements */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-1" prefetch={true}>
                 <div className="relative">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-primary">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" 
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  {/* add a better logo (TODO) */}
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg sm:text-xl font-bold tracking-tight whitespace-nowrap text-primary leading-none">
@@ -145,36 +142,36 @@ export function SiteHeader() {
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Mobile Search Toggle */}
-            <button 
+            <button
               className="p-1 md:hidden"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               aria-label={isSearchOpen ? "Close search" : "Open search"}
             >
               <Search className="h-5 w-5 text-primary" />
             </button>
-            
+
             {!onAuthPage && <UserNav />}
             <CartButton />
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Search - Expandable */}
       {isSearchOpen && (
         <div className="px-4 py-3 border-t border-border bg-white md:hidden">
-          <SearchSuggestions 
-            placeholder="Search products..." 
+          <SearchSuggestions
+            placeholder="Search products..."
             isMobile={true}
             onSubmit={() => setIsSearchOpen(false)}
           />
         </div>
       )}
-      
+
       {/* Mobile Menu - Expandable */}
       {isMobileMenuOpen && (
-        <MobileMenu 
-          onAuthPage={onAuthPage} 
-          onClose={() => setIsMobileMenuOpen(false)} 
+        <MobileMenu
+          onAuthPage={onAuthPage}
+          onClose={() => setIsMobileMenuOpen(false)}
         />
       )}
     </header>
