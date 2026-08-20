@@ -4,7 +4,8 @@ import { redirect } from 'next/navigation'
 import LoginForm from '@/components/auth/login-form'
 
 export default async function LoginPage() {
-  const supabase = createServerComponentClient({ cookies })
+  const cookieStore = await cookies()
+  const supabase = createServerComponentClient({ cookies: (() => cookieStore) as any })
 
   const {
     data: { session },
